@@ -10,3 +10,4 @@ favoriteRouter.js
 returnRequetModel.js
 returnRequestController.js
 favoriteController.js
+favoriteModel.js
