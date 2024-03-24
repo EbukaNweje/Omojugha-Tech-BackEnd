@@ -2,7 +2,7 @@
 
 const express = require('express');
 const cartRouter = express.Router();
-const {addToCart, removeFromCart, updateQuantity, viewCartContents, clearCart, reorderItems }= require('../controllers/cartController');
+const {addToCart, removeFromCart, updateQuantity, viewCartContents, clearCart, }= require('../controllers/cartController');
 
 // POST request to add a product to the cart
 cartRouter.post('/add-to-cart', addToCart);
@@ -15,7 +15,7 @@ cartRouter.get('/view-cart-contents', viewCartContents);
 // DELETE request to clear all product from the cart
 cartRouter.delete('/clear-cart', clearCart);
 // PUT request to reorder products
-cartRouter.put('/cart/reorder', reorderItems)
+//cartRouter.put('/cart/reorder', reorderItems)  reorderItems
 
 
 module.exports = cartRouter;

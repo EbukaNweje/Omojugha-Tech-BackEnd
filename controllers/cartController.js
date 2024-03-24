@@ -124,35 +124,10 @@ const moveItemBackToCart = async (req, res) => {
     }
 };
 
-const reorderItems = async (req, res) => {
-    try {
-        const { userId, productIds } = req.body;
-
-        // Fetch the user's current cart items from the database
-        let userCart = await Cart.findOne({ userId });
-
-        // If the user's cart doesn't exist, create a new one
-        if (!userCart) {
-            userCart = new Cart({ userId, items: [] });
-        }
-
-        // Add the selected items to the user's cart
-        userCart.items.push(...productIds.map(productId => ({ productId, quantity: 1 })));
-
-        // Save the updated cart in the database
-        await userCart.save();
-
-        res.status(200).json({ message: 'Items added to cart successfully', data: userCart });
-    } catch (error) {
-        console.error('Error adding items to cart:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-};
 
 
 
 
 
-
-
-module.exports = { addToCart, removeFromCart, updateQuantity, viewCartContents, clearCart, moveItemToSaved, moveItemBackToCart, reorderItems }
+module.exports = { addToCart, removeFromCart, updateQuantity, viewCartContents, clearCart, moveItemToSaved, moveItemBackToCart,  }
+//reorderItems

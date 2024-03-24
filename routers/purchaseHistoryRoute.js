@@ -2,14 +2,19 @@
 
 const express = require('express');
 const purchaseHistoryRouter = express.Router();
-const {addToPurchaseHistory, viewPurchaseHistory, deletePurchaseHistory, getFilteredPurchaseHistory, getPurchaseHistoryEntry, getPurchaseHistoryCSV, getPurchaseHistoryPDF} = require('../controllers/purchaseHistoryController');
+const {addToPurchaseHistory, viewPurchaseHistory, deletePurchaseHistory,  getPurchaseHistoryEntry, } = require('../controllers/purchaseHistoryController');
 
 // POST request to add a product to the purchase history
 purchaseHistoryRouter.post('/add-to-history', addToPurchaseHistory);
-purchaseHistoryRouter.get('/purchase-history/csv', getPurchaseHistoryCSV);
-purchaseHistoryRouter.get('/purchase-history/pdf', getPurchaseHistoryPDF);
+//purchaseHistoryRouter.get('/purchase-history/csv', getPurchaseHistoryCSV);
+//purchaseHistoryRouter.get('/purchase-history/pdf', getPurchaseHistoryPDF);
 purchaseHistoryRouter.get('/view-purchase-history', viewPurchaseHistory);
-purchaseHistoryRouter.get('/filtered-purchase-history', getFilteredPurchaseHistory);
+purchaseHistoryRouter.delete('/delete-purchase-history', deletePurchaseHistory);
+purchaseHistoryRouter.get('/view-one-history', getPurchaseHistoryEntry);
+
+//purchaseHistoryRouter.get('/filtered-purchase-history', getFilteredPurchaseHistory);
+
+//getFilteredPurchaseHistory, getPurchaseHistoryCSV, getPurchaseHistoryPDF
 
 
 
