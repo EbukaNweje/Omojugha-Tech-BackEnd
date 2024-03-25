@@ -3,8 +3,8 @@ require('./config/config.js')
 const router = require('./routers/userRout.js')
 const cartRouter = require ("./routers/cartRoute.js")
 const purchaseHistoryRouter = require("./routers/purchaseHistoryRoute.js")
-const returnRouter = require("./routers/returnRequestRoute.js")
-const favoriteRouter = require("./routers/favoriteRouter.js")
+const returnRouter = require("./routers/returnRequestRoutes.js")
+const favoriteRouter = require("./routers/favoriteRouters.js")
 const PORT = process.env.PORT
 
 
