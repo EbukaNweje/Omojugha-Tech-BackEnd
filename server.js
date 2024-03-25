@@ -6,6 +6,7 @@ const cartRouter = require ("./routers/cartRoute.js")
 const purchaseHistoryRouter = require("./routers/purchaseHistoryRoute.js")
 const returnRouter = require("./routers/returnRequestRoutes.js")
 const favoriteRouter = require("./routers/favoriteRouters.js")
+const productRouter = require('./routers/productRouter.js')
 const PORT = process.env.PORT
 
 
@@ -14,6 +15,7 @@ app.use(express.json())
 app.use(router)
 app.use(adminRouter)
 app.use(cartRouter)
+app.use(productRouter)
 app.use(purchaseHistoryRouter)
 app.use(returnRouter)
 app.use(favoriteRouter)
