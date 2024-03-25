@@ -7,7 +7,8 @@ trackingModels.js
 hide.text
 notificationSettingRouter.js
 favoriteRouters.js
-returnRequetModels.js
+returnRequestModel.js
 returnRequestControllers.js
 favoriteControllers.js
 favoriteModel.js
+returnRequestRoute.js
