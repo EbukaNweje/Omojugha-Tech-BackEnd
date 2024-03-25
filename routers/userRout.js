@@ -1,7 +1,9 @@
 const router = require("express").Router()
 
-// const {home} = require("../controllers/userController")
+const { signUp, logIn } = require("../controllers/userController")
+const userValidation = require("../middleWare/validator")
 
-// router.get("/", home)
+router.post('/sign-up', userValidation, signUp)
+router.post('/log-in',  logIn)
 
 module.exports = router

@@ -1,14 +1,13 @@
-const userModel = require("../models/userModel")
-require("dotenv").config()
+const adminModel = require("../models/userModel")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
-exports.signUp = async (req, res) => {
+exports.registerAdmin = async (req, res) => {
     try {
         // get the requirement for the registration
         const {fullName, email, password, confirmPassword} = req.body
         //check if email already exist
-        const emailExist = await userModel.findOne({email})
+        const emailExist = await adminModel.findOne({email})
         if (emailExist) {
             return res.status(400).json({
                 message: "This user already exist"
@@ -27,7 +26,7 @@ exports.signUp = async (req, res) => {
         const firstName = fullNameParts[0];
         const lastNameInitial = fullNameParts.slice(-1)[0][0];
         
-        const user = await userModel.create({
+        const user = await adminModel.create({
             fullName:fullName.toLowerCase(),
             email: email.toLowerCase(),
             password: hash,
@@ -41,7 +40,7 @@ exports.signUp = async (req, res) => {
         }, process.env.jwtSecret, { expiresIn : "60"})
 
         // send verification email to the user
-        //     const name = `${user.fullName.toUpperCase()} . ${user.lastName.slice(0,1).toUpperCase()}`
+        //     const name = `${user.firstName.toUpperCase()} . ${user.lastName.slice(0,1).toUpperCase()}`
         //     const link = `${req.protocol}://${req.get('host')}/verify-user/${user.id}/${token}`
         //     const html = dynamicHtml(link, name)
         //     sendEmail({
@@ -69,13 +68,13 @@ exports.signUp = async (req, res) => {
     }
 }
 
-exports.logIn = async (req, res) => {
+exports.signIn = async (req, res) => {
     try {
         ////Get the data from the request body
         const {email, password} = req.body
 
         //check if user exist already
-        const userExist = await userModel.findOne({email: email.toLowerCase()})
+        const userExist = await adminModel.findOne({email: email.toLowerCase()})
         if (!userExist) {
             return res.status(404).json({
                 message: "Email does not exist"
@@ -98,7 +97,7 @@ exports.logIn = async (req, res) => {
 
         //success msg
         res.status(200).json({
-           message: "Successfully Logged in" ,
+           message: "Successfully Log in" ,
            token
         })
     } catch (error) {
@@ -120,7 +119,7 @@ exports.signOut = async (req, res) => {
         const userId = req.user.userId
 
         //find user
-        const user = await userModel.findById(userId)
+        const user = await adminModel.findById(userId)
 
         //push the user to blacklist and save
         user.blackList.push(token)
@@ -146,7 +145,7 @@ exports.verifyUser = async (req, res) => {
 
         await jwt.verify(token, process.env.jwtSecret)
 
-        const updatedUser = await userModel.findByIdAndUpdate(id, {isVerified : true}, {new: true})
+        const updatedUser = await adminModel.findByIdAndUpdate(id, {isVerified : true}, {new: true})
         res.redirect (" ")
         
         res.status(200).json({
@@ -163,7 +162,7 @@ exports.verifyUser = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
     try {
-        const checkUser = await userModel.findOne({email: req.body.email})
+        const checkUser = await adminModel.findOne({email: req.body.email})
         if (!checkUser) {
             return res.status(404).json({
                 message: "Email does not exist"
@@ -199,14 +198,14 @@ exports.resetPassword = async (req, res) => {
         //check if password exist
         if (!password) {
             return res.status(404).json({
-                message: "Passwprd cannot be empty"
+                message: "Password cannot be empty"
             })
         }
 
         const saltPass = bcrypt.genSaltSync(12);
         const hashPass = bcrypt.hashSync(password, saltPass);
 
-        const resetPass = await userModel.findByIdAndUpdate(id, { password: hashPass }, { new: true });
+        const resetPass = await adminModel.findByIdAndUpdate(id, { password: hashPass }, { new: true });
         
         //success
         return res.status(200).json({
