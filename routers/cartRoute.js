@@ -9,7 +9,7 @@ cartRouter.post('/add-to-cart', addToCart);
 // DELETE request to remove a product from the cart
 cartRouter.delete('/remove-from-cart', removeFromCart);
 // PUT request to update quantities of product on the cart
-cartRouter.put('/update-cart', updateQuantity);
+cartRouter.put('/update-cart/:productId', updateQuantity);
 // GET request to view all products on the cart
 cartRouter.get('/view-cart-contents', viewCartContents);
 // DELETE request to clear all product from the cart
