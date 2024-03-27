@@ -69,6 +69,30 @@ exports.signUp = async (req, res) => {
     }
 }
 
+exports.verifyUser = async (req,res)=>{
+    try{
+       
+          const  id = req.params.id
+          const token = req.params.token
+          
+          await jwt.verify(token, process.env.JWT_KEY )
+
+       const updatedUser = await userModel.findByIdAndUpdate(id, {isVerified: true}, {new: true})
+       res.redirect ("https://")
+
+   
+       res.status(200).json({
+           message:`user with emmail:${updatedUser.email} is now verified`,
+           data: updatedUser
+       })
+    }catch(err){
+       res.status(500).json({
+           error: err.message
+       })
+    } 
+   }
+
+
 exports.logIn = async (req, res) => {
     try {
         ////Get the data from the request body
@@ -108,6 +132,63 @@ exports.logIn = async (req, res) => {
     }
 }
 
+exports.getOneUser = async (req, res) =>{
+    try{
+        const userId = req.user.userId
+        console.log(userId)
+        const user = await userModel.findById(userId)
+        if(!user){
+            return res.status(404).send({
+                error: `User not found`
+            })
+        }
+
+        res.status(200).json({
+            message: `User found ${user.firstName}`,
+            data: user
+        })
+
+    }catch(error){
+        res.status(500).json({
+            message: `Internal server error: ${error.message}`
+        })
+    }
+}
+
+exports.reverifyUser = async (req, res) =>{
+    try{
+        const {email} = req.body
+        const newUser = await userModel.findOne({email})
+        if(!newUser){
+            return res.status(404).json({
+                message: `User with email: ${newUser.email} does not exists`
+            })
+        }       
+         // generate a token for the user 
+         const token = jwt.sign({
+            userId:newUser._id,
+            email:newUser.email,
+            firstName: newUser.firstName,
+            lastName: newUser.lastName 
+        },process.env.JWT_KEY,{expiresIn:"6000s"})
+
+        // send verification email to the user
+            const name = `${newUser.firstName.toUpperCase()} . ${newUser.lastName.slice(0,1).toUpperCase()}`
+            const link = `${req.protocol}://${req.get('host')}/verify-user/${newUser.id}/${token}`
+            const html = dynamicHtml(link, name)
+            sendEmail({
+            email:newUser.email,
+            subject:"Click on the button below to verify your email", 
+            html
+            })
+    }
+    catch(error){
+        res.status(500).json({
+            message: `Internal error message: ${error.message}`
+        })
+    }
+}
+
 exports.signOut = async (req, res) => {
     try {
         const token = req.headers.authorization.spilt(' ')[1]
@@ -139,27 +220,6 @@ exports.signOut = async (req, res) => {
     }
 }
 
-exports.verifyUser = async (req, res) => {
-    try {
-        const id = req.params.id
-        const token = req.params.token
-
-        await jwt.verify(token, process.env.jwtSecret)
-
-        const updatedUser = await userModel.findByIdAndUpdate(id, {isVerified : true}, {new: true})
-        res.redirect (" ")
-        
-        res.status(200).json({
-            message:`user with emmail:${updatedUser.email} is now verified`,
-            data: updatedUser
-        });
-        
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
 
 exports.forgotPassword = async (req, res) => {
     try {

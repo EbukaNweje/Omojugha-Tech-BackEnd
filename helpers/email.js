@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 await transporter.sendMail(mailOption, (error)=>{
   if (error) {
    return res.status(500).json({
-    error: 'Error sending verification email' + error.message
+    message: 'Error sending verification email' + error.message
    })
   }else{
     return res.status(200).json({
