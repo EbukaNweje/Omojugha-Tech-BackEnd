@@ -2,6 +2,8 @@ const userModel = require("../models/userModel")
 require("dotenv").config()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const dynamicHtml = require("../helpers/html")
+const {sendEmail} = require("../helpers/email")
 
 exports.signUp = async (req, res) => {
     try {
@@ -14,7 +16,7 @@ exports.signUp = async (req, res) => {
                 message: "This user already exist"
             })
         }
-        if (confirmPassword != password) {
+        if (confirmPassword !== password) {
             return res.status(400).json({
                 message: "Password does not match"
             })
@@ -22,43 +24,40 @@ exports.signUp = async (req, res) => {
 
         const salt = bcrypt.genSaltSync(12)
         const hash = bcrypt.hashSync(password, salt)
-
-        const fullNameParts = fullName.split(' ');
-        const firstName = fullNameParts[0];
-        const lastNameInitial = fullNameParts.slice(-1)[0][0];
-        
-        const user = await userModel.create({
-            fullName:fullName.toLowerCase(),
+        //register the user
+        const newUser = await userModel.create({
+            fullName: fullName.toLowerCase(),
             email: email.toLowerCase(),
             password: hash,
             confirmPassword: hash
         })
 
         const token = jwt.sign({
-            userId: user._id,
-            email: user.email,
-            fullName: user.fullName
-        }, process.env.jwtSecret, { expiresIn : "60"})
+            userId: newUser._id,
+            email: newUser.email,
+            fullName: newUser.fullName,
+        },process.env.jwtSecret,{expiresIn:"6000s"})
 
         // send verification email to the user
-        //     const name = `${user.fullName.toUpperCase()} . ${user.lastName.slice(0,1).toUpperCase()}`
-        //     const link = `${req.protocol}://${req.get('host')}/verify-user/${user.id}/${token}`
-        //     const html = dynamicHtml(link, name)
-        //     sendEmail({
-        //     email: user.email,
-        //     subject: "Click on the button below to verify your email", 
-        //     html
-        // })
+            const name = `${newUser.fullName.toUpperCase()}`
+            const link = `${req.protocol}://${req.get('host')}/verify-user/${newUser.id}/${token}`
+            const html = dynamicHtml(link, name)
+            sendEmail({
+            email: newUser.email,
+            subject: "Click on the button below to verify your email", 
+            html
+        })
         //failure mssg
-        if (!user) {
+        if (!newUser) {
             return res.status(400).json({
                 message: "Error creating your account"
             })
         }
+        console.log(newUser)
 
         res.status(200).json({
-            message: `Hello, Your Account Has Been Successfully Created`,
-            data: user
+            message: `Hello, ${newUser.fullName} Your Account Has Been Successfully Created`,
+            data: newUser
         });
 
 
