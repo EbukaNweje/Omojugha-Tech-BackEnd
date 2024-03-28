@@ -4,6 +4,7 @@ const router = require('./routers/userRout.js')
 const adminRouter = require("./routers/adminRouter.js")
 const cartRouter = require ("./routers/cartRoute.js")
 const purchaseHistoryRouter = require("./routers/purchaseHistoryRoute.js")
+const searchRouter = require("./routers/searchRouter.js");
 
 const productRouter = require('./routers/productRouter.js')
 const categoryRouter = require('./routers/categoryRouter.js')
@@ -18,6 +19,7 @@ app.use(cartRouter)
 app.use(productRouter)
 app.use(categoryRouter)
 app.use(purchaseHistoryRouter)
+app.use(searchRouter);
 
 
 

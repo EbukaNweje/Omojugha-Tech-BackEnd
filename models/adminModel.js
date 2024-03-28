@@ -15,6 +15,10 @@ const adminSchema = new mongoose.Schema({
     isAdmin: {
         type: String,
         default: true
+    },
+    isVerified:{
+        type: Boolean,
+        default: false
     }
 }, {timestamps: true})
 

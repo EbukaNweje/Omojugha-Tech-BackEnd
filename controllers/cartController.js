@@ -8,7 +8,7 @@ const addToCart = async (req, res) => {
         const { userId, productId } = req.body;
 
         // Check if the product already exists in the user's cart
-        const cartItem = await Cart.findOne({ userId, productId });
+        let cartItem = await Cart.findOne({ userId, productId });
 
         if (cartItem) {
             // If the product exists, increment the quantity
