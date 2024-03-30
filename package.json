@@ -13,9 +13,11 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.3.1",
     "express": "^4.19.1",
+    "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "nodemon": "^3.0.2",

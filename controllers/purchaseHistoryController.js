@@ -3,13 +3,19 @@ const PurchaseHistory = require('../models/purchaseHistoryModel');
 const { createCsvWriter } = require('csv-writer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const User = require("../models/userModel")
 
 const addToPurchaseHistory = async (req, res) => {
     try {
-        const { userId, productId, quantity } = req.body;
-
+        const userId = req.user.userId
+        const { productId, quantity } = req.body;
+        const user = await User.findById({ user: userId });
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
         const purchase = new PurchaseHistory({
-            userId,
             productId,
             quantity
         });
@@ -26,7 +32,7 @@ const addToPurchaseHistory = async (req, res) => {
 // Route handler to fetch and return the user's purchase history
 const viewPurchaseHistory = async (req, res) => {
     try {
-        const userId = req.params.userId; 
+        const userId = req.params.userId;
         const purchaseHistory = await PurchaseHistory.find({ userId });
         res.status(200).json({
             success: true,
@@ -80,5 +86,5 @@ const getPurchaseHistoryEntry = async (req, res) => {
 
 
 
-module.exports = { addToPurchaseHistory, viewPurchaseHistory, deletePurchaseHistory,  getPurchaseHistoryEntry,  }
+module.exports = { addToPurchaseHistory, viewPurchaseHistory, deletePurchaseHistory, getPurchaseHistoryEntry, }
 //getFilteredPurchaseHistory, getPurchaseHistoryCSV, getPurchaseHistoryPDF
