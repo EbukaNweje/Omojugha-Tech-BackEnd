@@ -5,9 +5,9 @@ const cartRouter = express.Router();
 const {addToCart, removeFromCart, updateQuantity, viewCartContents, clearCart, }= require('../controllers/cartController');
 
 // POST request to add a product to the cart
-cartRouter.post('/add-to-cart', addToCart);
+cartRouter.post('/add-to-cart/:productId', addToCart);
 // DELETE request to remove a product from the cart
-cartRouter.delete('/remove-from-cart', removeFromCart);
+cartRouter.delete('/remove-from-cart/:productId', removeFromCart);
 // PUT request to update quantities of product on the cart
 cartRouter.put('/update-cart/:productId', updateQuantity);
 // GET request to view all products on the cart
