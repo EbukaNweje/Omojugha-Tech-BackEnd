@@ -21,12 +21,8 @@ exports.registerAdmin = async (req, res) => {
 
         const salt = bcrypt.genSaltSync(12)
         const hash = bcrypt.hashSync(password, salt)
-
-        const fullNameParts = fullName.split(' ');
-        const firstName = fullNameParts[0];
-        const lastNameInitial = fullNameParts.slice(-1)[0][0];
         
-        const user = await adminModel.create({
+        const admin = await adminModel.create({
             fullName:fullName.toLowerCase(),
             email: email.toLowerCase(),
             password: hash,
@@ -34,22 +30,23 @@ exports.registerAdmin = async (req, res) => {
         })
 
         const token = jwt.sign({
-            userId: user._id,
-            email: user.email,
-            fullName: user.fullName
+            adminId: admin._id,
+            email: admin.email,
+            fullName: admin.fullName
         }, process.env.jwtSecret, { expiresIn : "60"})
 
-        // send verification email to the user
-        //     const name = `${user.firstName.toUpperCase()} . ${user.lastName.slice(0,1).toUpperCase()}`
-        //     const link = `${req.protocol}://${req.get('host')}/verify-user/${user.id}/${token}`
-        //     const html = dynamicHtml(link, name)
-        //     sendEmail({
-        //     email: user.email,
-        //     subject: "Click on the button below to verify your email", 
-        //     html
-        // })
+        // send verification email to the admin
+        // send verification email to the admin
+        const name = `${admin.fullName.toUpperCase()}`
+        const link = `${req.protocol}://${req.get('host')}/verify-user/${user.id}/${token}`
+        const html = dynamicHtml(link, name)
+        sendEmail({
+        email: admin.email,
+        subject: "Click on the button below to verify your email", 
+        html
+    })
         //failure mssg
-        if (!user) {
+        if (!admin) {
             return res.status(400).json({
                 message: "Error creating your account"
             })
@@ -57,7 +54,7 @@ exports.registerAdmin = async (req, res) => {
 
         res.status(200).json({
             message: `Hello, Your Account Has Been Successfully Created`,
-            data: user
+            data: admin
         });
 
 
