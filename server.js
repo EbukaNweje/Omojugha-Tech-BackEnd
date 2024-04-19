@@ -9,6 +9,7 @@ const searchRouter = require("./routers/searchRouter.js");
 
 const productRouter = require('./routers/productRouter.js')
 const categoryRouter = require('./routers/categoryRouter.js')
+const paymentRouter = require('./routers/paymentRouter.js')
 const PORT = process.env.PORT
 
 
@@ -22,6 +23,7 @@ app.use(productRouter)
 app.use(categoryRouter)
 app.use(purchaseHistoryRouter)
 app.use(searchRouter);
+app.use(paymentRouter)
 
 
 
